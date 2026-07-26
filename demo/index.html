@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tea AiLabs — TikTok Operator (Demo)</title>
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --panel: #14161c;
+      --line: #2a2e38;
+      --text: #e8e8e8;
+      --muted: #9aa0a6;
+      --accent: #25f4ee;
+      --pink: #fe2c55;
+      --ok: #3ddc97;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: radial-gradient(1200px 600px at 20% -10%, #1a2030 0%, var(--bg) 55%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.5rem; border-bottom: 1px solid var(--line);
+      background: rgba(11,12,16,.85); backdrop-filter: blur(8px);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .brand { display: flex; gap: .75rem; align-items: center; font-weight: 700; }
+    .logo {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--pink));
+    }
+    .badge {
+      font-size: .75rem; color: var(--muted); border: 1px solid var(--line);
+      padding: .2rem .5rem; border-radius: 999px;
+    }
+    main { max-width: 920px; margin: 0 auto; padding: 1.5rem; }
+    h1 { font-size: 1.5rem; margin: 0 0 .35rem; }
+    .sub { color: var(--muted); margin: 0 0 1.25rem; }
+    .steps {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem;
+      margin-bottom: 1.25rem;
+    }
+    .step {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+      padding: .75rem; font-size: .85rem; color: var(--muted);
+    }
+    .step.active { border-color: var(--accent); color: var(--text); box-shadow: 0 0 0 1px rgba(37,244,238,.25); }
+    .step.done { border-color: var(--ok); color: var(--ok); }
+    .step b { display: block; color: inherit; margin-bottom: .2rem; }
+    .panel {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+      padding: 1.25rem;
+    }
+    .row { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+    button, .btn {
+      appearance: none; border: 0; cursor: pointer; font-weight: 700;
+      border-radius: 12px; padding: .85rem 1.1rem; font-size: .95rem;
+    }
+    .btn-tiktok {
+      background: #000; color: #fff; border: 1px solid #333;
+      display: inline-flex; gap: .5rem; align-items: center;
+    }
+    .btn-tiktok:hover { border-color: var(--pink); }
+    .btn-primary { background: linear-gradient(90deg, var(--accent), #7ef9f4); color: #041016; }
+    .btn-primary:disabled { opacity: .4; cursor: not-allowed; }
+    .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--line); }
+    .status {
+      margin-top: 1rem; padding: .85rem 1rem; border-radius: 12px;
+      background: #0f131a; border: 1px solid var(--line); color: var(--muted);
+      min-height: 3rem;
+    }
+    .status.ok { border-color: rgba(61,220,151,.4); color: var(--ok); }
+    .status.warn { border-color: rgba(254,44,85,.35); color: #ffb3c1; }
+    .file {
+      margin-top: 1rem; padding: 1rem; border: 1px dashed var(--line); border-radius: 12px;
+      color: var(--muted);
+    }
+    .file strong { color: var(--text); }
+    .meta { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-top: 1rem; }
+    label { display: block; font-size: .8rem; color: var(--muted); margin-bottom: .3rem; }
+    input, textarea {
+      width: 100%; background: #0f131a; border: 1px solid var(--line); color: var(--text);
+      border-radius: 10px; padding: .7rem .8rem; font: inherit;
+    }
+    .hidden { display: none !important; }
+    .consent {
+      border: 1px solid var(--line); border-radius: 14px; padding: 1rem; background: #0f131a;
+    }
+    .consent h2 { margin: 0 0 .5rem; font-size: 1.1rem; }
+    footer { margin-top: 2rem; color: var(--muted); font-size: .85rem; }
+    footer a { color: var(--accent); }
+    @media (max-width: 700px) {
+      .steps { grid-template-columns: 1fr 1fr; }
+      .meta { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <div>Tea AiLabs Operator</div>
+        <div style="font-size:.75rem;color:var(--muted);font-weight:500">TikTok Content Posting · Demo</div>
+      </div>
+    </div>
+    <span class="badge" id="envBadge">Sandbox demo · verified domain</span>
+  </header>
+
+  <main>
+    <h1>Publish educational Shorts to our TikTok</h1>
+    <p class="sub">Brand account only. Login Kit + Content Posting API. Domain: tommohcio.github.io/tea-ailabs-legal/</p>
+
+    <div class="steps" id="stepper">
+      <div class="step active" data-step="1"><b>1 · Connect</b>Login Kit OAuth</div>
+      <div class="step" data-step="2"><b>2 · Consent</b>TikTok authorization</div>
+      <div class="step" data-step="3"><b>3 · Select</b>Vertical MP4 + caption</div>
+      <div class="step" data-step="4"><b>4 · Publish</b>Content Posting API</div>
+    </div>
+
+    <!-- STEP 1 -->
+    <section class="panel" id="view-connect">
+      <div class="row">
+        <div style="flex:1">
+          <h2 style="margin:0 0 .35rem;font-size:1.15rem">Connect TikTok (Login Kit)</h2>
+          <p style="margin:0;color:var(--muted)">Authorized operators only. Scopes: user.info.basic, video.upload, video.publish.</p>
+        </div>
+        <button class="btn-tiktok" id="btnConnect" type="button">
+          <span style="width:18px;height:18px;border-radius:4px;background:linear-gradient(135deg,#25f4ee,#fe2c55)"></span>
+          Continue with TikTok
+        </button>
+      </div>
+      <div class="status" id="statusConnect">Not connected. Click Continue with TikTok to start OAuth.</div>
+    </section>
+
+    <!-- STEP 2 consent mock (simulates TikTok consent screen for demo recording) -->
+    <section class="panel hidden" id="view-consent">
+      <div class="consent">
+        <h2>TikTok authorization</h2>
+        <p style="color:var(--muted);margin-top:0">Tea AiLabs Operator wants to:</p>
+        <ul style="color:var(--muted)">
+          <li>Read basic profile info (user.info.basic)</li>
+          <li>Upload videos to your account (video.upload)</li>
+          <li>Publish videos (video.publish)</li>
+        </ul>
+        <p style="color:var(--muted)">Account: <strong style="color:var(--text)">@TeaAiLabs</strong> (brand)</p>
+        <div class="row" style="margin-top:1rem">
+          <button class="btn-ghost" type="button" id="btnDeny">Deny</button>
+          <button class="btn-primary" type="button" id="btnAllow">Authorize</button>
+        </div>
+      </div>
+      <div class="status" id="statusConsent">Sandbox consent screen (demo UI on verified domain).</div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="panel hidden" id="view-select">
+      <h2 style="margin:0 0 .35rem;font-size:1.15rem">Select Short to publish</h2>
+      <p style="margin:0;color:var(--muted)">Vertical educational clip · Content Posting API</p>
+      <div class="file" id="fileBox">
+        <strong id="fileName">No file selected</strong>
+        <div id="fileMeta">Click “Choose vertical video” to attach an MP4 (demo uses a sample asset name).</div>
+      </div>
+      <div class="row" style="margin-top:1rem">
+        <button class="btn-ghost" type="button" id="btnPick">Choose vertical video</button>
+      </div>
+      <div class="meta">
+        <div>
+          <label for="caption">Caption / title</label>
+          <input id="caption" value="Nobody believed black holes were real — full episode on our channel #space #science" />
+        </div>
+        <div>
+          <label for="privacy">Privacy</label>
+          <input id="privacy" value="PUBLIC_TO_EVERYONE (or sandbox draft)" />
+        </div>
+      </div>
+      <div class="status" id="statusSelect">Connect complete. Pick a vertical MP4 and caption, then publish.</div>
+      <div class="row" style="margin-top:1rem">
+        <button class="btn-primary" type="button" id="btnPublish" disabled>Publish via Content Posting API</button>
+      </div>
+    </section>
+
+    <!-- STEP 4 -->
+    <section class="panel hidden" id="view-done">
+      <h2 style="margin:0 0 .35rem;font-size:1.15rem;color:var(--ok)">Published</h2>
+      <p style="margin:0;color:var(--muted)">Content Posting API accepted the upload for our brand account.</p>
+      <div class="status ok" id="statusDone">
+        publish_id: v_pub_demo~teaailabs.sandbox.001<br />
+        open_id: brand_account_linked<br />
+        status: PROCESSING → success (sandbox demo)
+      </div>
+      <div class="row" style="margin-top:1rem">
+        <button class="btn-ghost" type="button" id="btnReset">Run flow again</button>
+        <a class="btn-primary" style="text-decoration:none" href="../privacy.html">Privacy Policy</a>
+        <a class="btn-ghost" style="text-decoration:none" href="../terms.html">Terms</a>
+      </div>
+    </section>
+
+    <footer>
+      Demo for TikTok App Review · website domain matches verified URL property ·
+      <a href="../">Legal home</a> ·
+      <a href="../privacy.html">Privacy</a> ·
+      <a href="../terms.html">Terms</a>
+    </footer>
+  </main>
+
+  <script>
+    const steps = [...document.querySelectorAll('.step')];
+    function setStep(n) {
+      steps.forEach(s => {
+        const i = +s.dataset.step;
+        s.classList.toggle('active', i === n);
+        s.classList.toggle('done', i < n);
+      });
+    }
+    function show(id) {
+      ['view-connect','view-consent','view-select','view-done'].forEach(v => {
+        document.getElementById(v).classList.toggle('hidden', v !== id);
+      });
+    }
+
+    document.getElementById('btnConnect').onclick = () => {
+      document.getElementById('statusConnect').textContent = 'Redirecting to TikTok authorization…';
+      setTimeout(() => {
+        setStep(2);
+        show('view-consent');
+      }, 700);
+    };
+
+    document.getElementById('btnDeny').onclick = () => {
+      document.getElementById('statusConsent').textContent = 'Authorization denied. Returning…';
+      setTimeout(() => { setStep(1); show('view-connect'); }, 600);
+    };
+
+    document.getElementById('btnAllow').onclick = () => {
+      document.getElementById('statusConsent').className = 'status ok';
+      document.getElementById('statusConsent').textContent = 'Authorized. Returning with code → exchanging for access_token (sandbox).';
+      setTimeout(() => {
+        setStep(3);
+        show('view-select');
+      }, 900);
+    };
+
+    let picked = false;
+    document.getElementById('btnPick').onclick = () => {
+      picked = true;
+      document.getElementById('fileName').textContent = 'short_kmt_hook_4k60_vertical.mp4';
+      document.getElementById('fileMeta').textContent = '2160×3840 · ~48s · educational Short · ready for Content Posting API';
+      document.getElementById('statusSelect').className = 'status ok';
+      document.getElementById('statusSelect').textContent = 'File attached. Ready to publish to @TeaAiLabs.';
+      document.getElementById('btnPublish').disabled = false;
+    };
+
+    document.getElementById('btnPublish').onclick = () => {
+      if (!picked) return;
+      document.getElementById('btnPublish').disabled = true;
+      document.getElementById('statusSelect').textContent = 'Uploading via Content Posting API…';
+      setTimeout(() => {
+        document.getElementById('statusSelect').textContent = 'Creating post… publish_id issued…';
+        setTimeout(() => {
+          setStep(4);
+          show('view-done');
+        }, 900);
+      }, 1000);
+    };
+
+    document.getElementById('btnReset').onclick = () => {
+      picked = false;
+      document.getElementById('btnPublish').disabled = true;
+      document.getElementById('fileName').textContent = 'No file selected';
+      document.getElementById('fileMeta').textContent = 'Click “Choose vertical video” to attach an MP4 (demo uses a sample asset name).';
+      document.getElementById('statusConnect').className = 'status';
+      document.getElementById('statusConnect').textContent = 'Not connected. Click Continue with TikTok to start OAuth.';
+      document.getElementById('statusConsent').className = 'status';
+      document.getElementById('statusSelect').className = 'status';
+      setStep(1);
+      show('view-connect');
+    };
+
+    // deep-link helpers for automated recording
+    const q = new URLSearchParams(location.search);
+    if (q.get('auto') === '1') {
+      setTimeout(() => document.getElementById('btnConnect').click(), 800);
+      setTimeout(() => document.getElementById('btnAllow').click(), 2200);
+      setTimeout(() => document.getElementById('btnPick').click(), 3800);
+      setTimeout(() => document.getElementById('btnPublish').click(), 5200);
+    }
+  </script>
+</body>
+</html>
